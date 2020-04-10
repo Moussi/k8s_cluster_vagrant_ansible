@@ -1,0 +1,51 @@
+Vagrant.configure("2") do |config|
+  config.vm.provision "shell", path: "./setup_ssh.sh"
+
+  config.vm.provision "shell", inline: <<-SHELL
+    cat /vagrant/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+    cat /vagrant/id_ecdsa.pub >> /home/vagrant/.ssh/authorized_keys
+    cat /vagrant/id_rsa.pub >> /root/.ssh/authorized_keys
+    cat /vagrant/id_ecdsa.pub >> /root/.ssh/authorized_keys
+    swapoff -a
+  SHELL
+
+  config.vm.define "master1" do |master1|
+      master1.vm.hostname = "master1"
+      master1.vm.box = "ubuntu/bionic64"
+      master1.vm.network :forwarded_port, guest: 22, host: 2222, id: "ssh"
+      master1.vm.network "private_network", ip: "172.16.94.10"
+      master1.vm.provider :virtualbox do |v|
+        v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        v.customize ["modifyvm", :id, "--memory", 2048]
+        v.customize ["modifyvm", :id, "--cpus", 2]
+        v.customize ["modifyvm", :id, "--name", "master1"]
+      end
+  end
+
+  config.vm.define "node1" do |node1|
+        node1.vm.hostname = "node1"
+        node1.vm.box = "ubuntu/bionic64"
+        node1.vm.network :forwarded_port, guest: 22, host: 2223, id: "ssh"
+        node1.vm.network "private_network", ip: "172.16.94.11"
+        node1.vm.provider :virtualbox do |v|
+          v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+          v.customize ["modifyvm", :id, "--memory", 2048]
+          v.customize ["modifyvm", :id, "--cpus", 2]
+          v.customize ["modifyvm", :id, "--name", "node1"]
+        end
+  end
+
+  config.vm.define "node2" do |node2|
+        node2.vm.hostname = "node2"
+        node2.vm.box = "ubuntu/bionic64"
+        node2.vm.network :forwarded_port, guest: 22, host: 2224, id: "ssh"
+        node2.vm.network "private_network", ip: "172.16.94.12"
+        node2.vm.provider :virtualbox do |v|
+          v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+          v.customize ["modifyvm", :id, "--memory", 2048]
+          v.customize ["modifyvm", :id, "--cpus", 2]
+          v.customize ["modifyvm", :id, "--name", "node2"]
+        end
+  end
+
+end

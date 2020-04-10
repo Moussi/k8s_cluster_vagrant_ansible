@@ -1,0 +1,38 @@
+---
+# tasks file for k8s
+
+- name: "add kubernetes gpg keys"
+  apt_key:
+    url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+    state: present
+  become: true
+
+- name: "add k8s apt repository"
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+  become: true
+
+- name: "install k8s modules"
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - kubelet
+    - kubectl
+    - kubeadm
+  become: true
+
+- name: "enable k8s service"
+  service:
+    name: "kubelet"
+    state: "started"
+    enabled: yes
+
+- name: "hold k8s versions"
+  command: "apt-mark hold {{ item }}"
+  loop:
+    - kubelet
+    - kubectl
+    - kubeadm
+  become: true

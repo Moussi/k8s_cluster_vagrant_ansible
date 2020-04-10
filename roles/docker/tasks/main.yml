@@ -1,0 +1,19 @@
+---
+# tasks file for docker
+
+- name: "install docker"
+  apt:
+    name: "docker.io"
+    state: "present"
+    update_cache: true
+  become: true
+
+- name: "enable docker service"
+  service:
+    name: "docker"
+    state: "started"
+    enabled: yes
+
+- name: "hold docker.io versions"
+  command: "apt-mark hold docker.io"
+  become: true

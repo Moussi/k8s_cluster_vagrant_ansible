@@ -1,0 +1,7 @@
+---
+
+- name: "k8s Installation"
+  hosts: all
+  gather_facts: no
+  roles:
+    - role: "k8s"
