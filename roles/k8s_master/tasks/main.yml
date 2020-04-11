@@ -1,2 +1,50 @@
 ---
 
+
+- name: create networking folder
+  file:
+    path: "{{ k8s_networks_dir }}"
+    owner: amoussi
+    group: amoussi
+    state: directory
+    recurse: yes
+
+- name: check directory
+  stat:
+    path: "{{ k8s_networks_dir }}"
+  register: network_dir
+
+- name: check kubeadmin files
+  stat:
+    path: "{{ k8s_admin_config_file }}"
+  register: kube_adm_file
+
+- name: "get calico networking files"
+  get_url:
+    url: "{{ item }}"
+    dest: "{{ k8s_networks_dir }}"
+    force: no
+  with_items: "{{ k8s_networking_files }}"
+  when: network_dir.stat.exists
+
+
+# init k8s cluster
+  ## Init master
+- name: "kubeadm init"
+  command: "kubeadm init --pod-network-cidr={{ pod_network_cidr }}"
+  run_once: true
+  become: true
+  when: kube_adm_file.stat.exists == False
+
+- name: create .kube folder
+  file:
+    path: "{{user_home}}/.kube/config"
+    owner: amoussi
+    group: amoussi
+    state: directory
+    recurse: yes
+  become: true
+
+- name: copy admin.config file
+  command: "cp -u {{ k8s_admin_config_file }} {{user_home}}/.kube/config"
+  become: true

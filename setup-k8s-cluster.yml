@@ -1,0 +1,7 @@
+---
+
+- name: "k8s setup cluster"
+  hosts: masters
+  gather_facts: yes
+  roles:
+    - role: "k8s_master"

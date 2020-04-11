@@ -1,1 +1,1 @@
-{"virtualbox":{"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/moussi/Desktop/Projects/devops/k8s","disabled":false,"__vagrantfile":true}}}
+{"virtualbox":{"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/moussi/Desktop/Projects/devops/k8s/ansible_k8s/vagrant","disabled":false,"__vagrantfile":true}}}
