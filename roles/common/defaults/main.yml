@@ -3,12 +3,17 @@
 
 main_user: amoussi
 user_home: "/home/{{main_user}}"
+k8s_networks_dir: "{{user_home}}/k8s/networks"
+
+k8s_networking_files_urls:
+  - https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
+  - https://docs.projectcalico.org/latest/manifests/calico.yaml
 
 k8s_networking_files:
-  - https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
-  - https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+  - "{{k8s_networks_dir}}/rbac-kdd.yaml"
+  - "{{k8s_networks_dir}}//calico.yaml"
 
-k8s_networks_dir: "{{user_home}}/k8s/networks"
+
 
 pod_network_cidr: 192.168.0.0/16
 

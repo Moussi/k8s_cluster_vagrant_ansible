@@ -24,7 +24,7 @@
     url: "{{ item }}"
     dest: "{{ k8s_networks_dir }}"
     force: no
-  with_items: "{{ k8s_networking_files }}"
+  with_items: "{{ k8s_networking_files_urls }}"
   when: network_dir.stat.exists
 
 
@@ -38,7 +38,7 @@
 
 - name: create .kube folder
   file:
-    path: "{{user_home}}/.kube/config"
+    path: "{{user_home}}/.kube"
     owner: amoussi
     group: amoussi
     state: directory
@@ -47,4 +47,13 @@
 
 - name: copy admin.config file
   command: "cp -u {{ k8s_admin_config_file }} {{user_home}}/.kube/config"
+  become: true
+
+- name: permissions admin.config file
+  command: "chown 1002:1002 {{user_home}}/.kube/config"
+  become: true
+
+- name: "kubectl apply rbac and calico networking"
+  command: "kubectl apply -f {{ item }}"
+  with_items: "{{ k8s_networking_files }}"
   become: true
