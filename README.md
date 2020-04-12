@@ -132,8 +132,7 @@ kubectl describe -h | more
 Executing commands at the command line one at a time, and you're going to be operating on one object at a time.
 ```shell script
 kubectl create deployment nginx --image=nginx
-# old version 1.13
-kubectl run nginx --image=nginx
+
 ```
 follow our pod and deployment status
 ```shell script
@@ -148,6 +147,7 @@ kubectl logs nginx
 expose service
 ```shell script
 kubectl create service nodeport nginx --tcp=80:80
+kubectl expose deployment hello-world --type=NodePort --name=example-service
 ```
 ## Declarative Deployments and Accessing and Modifying Existing Resources in Your Cluster
 We can define our configurations in code using manifests written in YAML or JSON, and feed those into the API server with commands like kubectl apply. In this case here, you can see kubectl apply -f deployment.yaml and the contents of deployment.yaml will have the description of the thing that I want to deploy inside of Kubernetes.  
